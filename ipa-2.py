@@ -229,7 +229,7 @@ def scytale_cipher(message, shift):
     # Stay within the function. Only use the parameters as input. The function should return your answer.
     
     if len(message) % shift != 0:
-    message += '_' * (shift - (len(message) % shift))
+        message += '_' * (shift - (len(message) % shift))
 
     encoded_message = ''
     for i in range(len(message)):
