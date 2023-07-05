@@ -156,26 +156,22 @@ def vigenere_cipher(message, key):
     # Replace `pass` with your code.
     # Stay within the function. Only use the parameters as input. The function should return your answer.
 
-    encrypted_message = ""
-    key_length = len(key)
-    key_index = 0
+    alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+    key = key.upper() * (len(message) // len(key)) + key.upper()[:len(message) % len(key)]
+    encrypted_message = ''
 
-    for letter in message:
-        if not letter.isalpha():
-            encrypted_message += letter
-            continue
-
-        uppercase = letter.isupper()
-        letter = letter.lower()
-        shift = ord(key[key_index % key_length].lower()) - ord('a')
-        shifted_letter = shift_by_letter(letter, shift)
-
-        if uppercase:
-            encrypted_message += shifted_letter.upper()
+    for i in range(len(message)):
+        if message[i].isspace():
+            encrypted_message += message[i]  # Preserve whitespace characters
         else:
-            encrypted_message += shifted_letter
+            char = message[i].upper()
+            key_char = key[i]
 
-        key_index += 1
+            if char.isalpha():
+                message_index = alphabet.index(char)
+                key_index = alphabet.index(key_char)
+                shifted_index = (message_index + key_index) % len(alphabet)
+                encrypted_message += alphabet[shifted_index]
 
     return encrypted_message
 
@@ -232,27 +228,15 @@ def scytale_cipher(message, shift):
     # Replace `pass` with your code.
     # Stay within the function. Only use the parameters as input. The function should return your answer.
     
-    message = message.replace(" ", "")
-    message_length = len(message)
-    rows = (message_length + shift - 1) // shift 
-    columns = shift
-    grid = [[''] * columns for _ in range(rows)]
+    if len(message) % shift != 0:
+    message += '_' * (shift - (len(message) % shift))
 
-    index = 0
-    for col in range(columns):
-        for row in range(rows):
-            if index < message_length:
-                grid[row][col] = message[index]
-                index += 1
-            else:
-                break
+    encoded_message = ''
+    for i in range(len(message)):
+        index = (i // shift) + (len(message) // shift) * (i % shift)
+        encoded_message += message[index]
 
-    encrypted_message = ''
-    for row in range(rows):
-        for col in range(columns):
-            encrypted_message += grid[row][col]
-
-    return encrypted_message
+    return encoded_message
 
 def scytale_decipher(message, shift):
     '''Scytale De-cipher.
@@ -282,18 +266,13 @@ def scytale_decipher(message, shift):
     # Replace `pass` with your code.
     # Stay within the function. Only use the parameters as input. The function should return your answer.
     
-    index = 0
-    for row in range(rows):
-        for col in range(columns):
-            if index < message_length:
-                grid[row][col] = message[index]
-                index += 1
-            else:
-                break
+    num_rows = len(message) // shift
+    num_cols = shift
 
-    decrypted_message = ''
-    for col in range(columns):
-        for row in range(rows):
-            decrypted_message += grid[row][col]
+    decoded_message = ''
+    for col in range(num_cols):
+        for row in range(num_rows):
+            index = row * num_cols + col
+            decoded_message += message[index]
 
-    return decrypted_message
+    return decoded_message.rstrip('_')
