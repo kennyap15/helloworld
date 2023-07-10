@@ -275,4 +275,4 @@ def scytale_decipher(message, shift):
             index = row * num_cols + col
             decoded_message += message[index]
 
-    return decoded_message.rstrip('_')
+    return decoded_message
