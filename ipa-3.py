@@ -42,12 +42,13 @@ def relationship_status(from_member, to_member, social_graph):
     # Replace `pass` with your code.
     # Stay within the function. Only use the parameters as input. The function should return your answer.
     
-    if to_member in social_graph.get(from_member, []):
-        if from_member in social_graph.get(to_member, []):
+    # social_graph on def(relationship_status) must be the dict parameter itself, not social_graph
+    if to_member in social_graph[from_member]["following"]:
+        if from_member in social_graph[to_member]["following"]:
             return "friends"
         else:
             return "follower"
-    elif from_member in social_graph.get(to_member, []):
+    elif from_member in social_graph[to_member]["following"]:
         return "followed by"
     else:
         return "no relationship"
@@ -79,22 +80,27 @@ def tic_tac_toe(board):
     # Replace `pass` with your code.
     # Stay within the function. Only use the parameters as input. The function should return your answer.
 
+    if not any(board):
+        return "NO WINNER"
+    
     # Check rows
     for row in board:
-        if len(set(row)) == 1:
+        if len(set(row)) == 1 and row[0] != "":
             return row[0]
 
     # Check columns
     for col in range(len(board[0])):
-        if len(set(board[i][col] for i in range(len(board)))) == 1:
-            return board[0][col]
+        column = [board[i][col] for i in range(len(board))]
+        if len(set(column)) == 1 and column[0] != "":
+            return column[0]
 
     # Check diagonals
-    if len(set(board[i][i] for i in range(len(board)))) == 1:
-        return board[0][0]
-
-    if len(set(board[i][len(board)-1-i] for i in range(len(board)))) == 1:
-        return board[0][len(board)-1]
+    diagonal1 = [board[i][i] for i in range(len(board))]
+    diagonal2 = [board[i][len(board)-1-i] for i in range(len(board))]
+    if len(set(diagonal1)) == 1 and diagonal1 != "":
+        return diagonal1[0]
+    if len(set(diagonal2)) == 1 and diagonal2 != "":
+        return diagonal2[0]
 
     return "NO WINNER"
 
